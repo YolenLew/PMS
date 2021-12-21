@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kkb-monitor-deployment
+  namespace: default
+  labels:
+    app: kkb-monitor
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kkb-monitor
+  template:
+    metadata:
+      labels:
+        app: kkb-monitor
+    spec:
+      containers:
+        - name: kkb-monitor
+          # 指定Docker Hub中的镜像地址
+          image: macrodocker/kkb-monitor:1.0-SNAPSHOT
+          ports:
+            - containerPort: 8101
+          env:
+            # 指定环境
+            - name: spring.profiles.active
+              value: prod
+            # 指定时区
+            - name: TZ
+              value: Asia/Shanghai
+            # 指定Nacos地址
+            - name: spring.cloud.nacos.discovery.server-addr
+              value: http://192.168.3.101:8848
+            - name: spring.cloud.nacos.config.server-addr
+              value: http://192.168.3.101:8848
+          volumeMounts:
+            - mountPath: /var/logs
+              name: log-volume
+      volumes:
+        - name: log-volume
+          hostPath:
+            path: /mydata/app/kkb-monitor/logs
+            type: DirectoryOrCreate
