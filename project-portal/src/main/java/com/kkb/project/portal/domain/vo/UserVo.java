@@ -1,6 +1,7 @@
 package com.kkb.project.portal.domain.vo;
 
 import com.kkb.project.portal.domain.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NoArgsConstructor;

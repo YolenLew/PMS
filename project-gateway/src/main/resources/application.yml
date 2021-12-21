@@ -28,7 +28,7 @@ spring:
   redis:
     database: 0
     port: 6379
-    host: 175.24.60.137
+    host: 192.168.211.110
 server:
   port: 9000
 
@@ -47,5 +47,6 @@ secure:
       - "/portal/work/*"
       - "/portal/work/list"
       - "/portal/user/login"
+      - "/portal/user/code"
       - "/portal/user/login/code"
       - "/portal/user/register"
