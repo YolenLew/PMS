@@ -1,0 +1,51 @@
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: 'http://localhost:9000/auth/rsa/publicKey'
+  cloud:
+    gateway:
+      routes:
+        - id: gateway
+          uri: http://localhost:9000
+          predicates:
+            - Path=/api/**
+          filters:
+            - StripPrefix=1
+        - id: oauth2
+          uri: http://localhost:8088
+          predicates:
+            - Path=/auth/**
+          filters:
+            - StripPrefix=1
+        - id: portal
+          uri: http://localhost:8087
+          predicates:
+            - Path=/portal/**
+          filters:
+            - StripPrefix=1
+  redis:
+    database: 0
+    port: 6379
+    host: 175.24.60.137
+server:
+  port: 9000
+
+secure:
+  ignore:
+    urls: #配置白名单路径
+      - "/auth/oauth/**"
+      - "/auth/login"
+      - "/auth/rsa/publicKey"
+      - "/portal/internal/recommendation/get/*"
+      - "/portal/internal/recommendation/list"
+      - "/portal/hall/fame/*"
+      - "/portal/hall/fame/findPerson/*"
+      - "/portal/hall/fame/praises/*"
+      - "/portal/hall/fame/find/fame/info/*"
+      - "/portal/work/*"
+      - "/portal/work/list"
+      - "/portal/user/login"
+      - "/portal/user/login/code"
+      - "/portal/user/register"

@@ -1,0 +1,20 @@
+server:
+  port: 8088
+
+spring:
+  redis:
+    database: 0
+    port: 6379
+    host: 175.24.60.137
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://8.140.125.207:3306/kkb?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
+    username: kkb
+    password: kkb
+  main:
+    allow-bean-definition-overriding: true
+
+keypair:
+  resource: kaikeba.jks
+  password: kaikeba
+  alias: kaikeba

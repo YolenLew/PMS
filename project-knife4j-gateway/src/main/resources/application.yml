@@ -1,0 +1,29 @@
+server:
+  port: 9001
+
+spring:
+  application:
+    name: knife4j-gateway
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+      routes:
+        - id: project-admin
+          uri: http://localhost:8082
+          predicates:
+            - Path=/admin/**
+          filters:
+            - StripPrefix=1
+        - id: project-portal
+          uri: http://localhost:8087
+          predicates:
+            - Path=/portal/**
+          filters:
+            - StripPrefix=1
+
+logging:
+  level:
+    org.springframework:cloud.gateway: debug
