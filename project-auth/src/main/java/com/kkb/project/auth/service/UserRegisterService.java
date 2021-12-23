@@ -2,6 +2,7 @@ package com.kkb.project.auth.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.kkb.project.auth.domain.UserRegister;
+import org.springframework.security.core.userdetails.UserDetails;
 
 /**
  * @author lemon
@@ -17,4 +18,6 @@ public interface UserRegisterService extends IService<UserRegister> {
      * @return
      */
     UserRegister loadUserByUsername(String username);
+
+    UserDetails loadUserByPhone(String phone);
 }

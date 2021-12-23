@@ -2,15 +2,20 @@ package com.kkb.project.auth.service.impl;
 
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.crypto.digest.BCrypt;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.kkb.project.auth.dao.ResourceMapper;
 import com.kkb.project.auth.domain.Resource;
 import com.kkb.project.auth.domain.UserRegister;
+import com.kkb.project.auth.extension.userdetails.RegisterUserDetails;
 import com.kkb.project.auth.service.UserRegisterService;
 import com.kkb.project.auth.service.UserRoleService;
 import com.kkb.project.common.constant.AuthConstant;
 import com.kkb.project.common.exception.Asserts;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.security.authentication.AccountExpiredException;
+import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.authentication.LockedException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -89,5 +94,24 @@ public class UserDetailServiceImpl implements UserDetailsService {
             grantedAuthorities.add(grantedAuthority);
         }
         return new User(userRegister.getPhone(), userRegister.getPassword(), grantedAuthorities);
+    }
+
+    public UserDetails loadUserByPhone(String phone) {
+        RegisterUserDetails userDetails = null;
+        UserRegister userRegister = userRegisterService.getOne(Wrappers.<UserRegister>lambdaQuery().eq(UserRegister::getPhone, phone));
+        if (ObjectUtil.isNotNull(userRegister)) {
+            userDetails = new RegisterUserDetails(userRegister);
+            userDetails.setAuthenticationMode("mobile");
+        }
+        if (userDetails == null) {
+            throw new UsernameNotFoundException("该账户不存在!");
+        } else if (!userDetails.isEnabled()) {
+            throw new DisabledException("该账户已被禁用!");
+        } else if (!userDetails.isAccountNonLocked()) {
+            throw new LockedException("该账号已被锁定!");
+        } else if (!userDetails.isAccountNonExpired()) {
+            throw new AccountExpiredException("该账号已过期!");
+        }
+        return userDetails;
     }
 }

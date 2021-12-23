@@ -152,7 +152,7 @@ public class UserRegisterServiceImpl extends ServiceImpl<UserRegisterMapper, Use
             sb.append(random.nextInt(10));
         }
         // ums:authCode 90s
-        redisService.set(AuthConstant.SMS_AUTH_CODE_KEY_PREFIX + phone, sb.toString(), 100);
+        redisService.set(AuthConstant.SMS_AUTH_CODE_KEY_PREFIX + phone, sb.toString(), 1000);
         return sb.toString();
     }
 

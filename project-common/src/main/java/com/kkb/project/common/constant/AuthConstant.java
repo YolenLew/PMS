@@ -67,4 +67,9 @@ public interface AuthConstant {
      */
     String SMS_AUTH_CODE_KEY_PREFIX = "sms:authCode:";
 
+    /**
+     * 可用状态标志：0可用，1不可用
+     */
+    Integer STATUS_YES = 0;
+
 }
