@@ -1,6 +1,7 @@
 package com.kkb.project.gateway.filter;
 
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
 import com.kkb.project.common.constant.AuthConstant;
 import com.nimbusds.jose.JWSObject;
 import net.minidev.json.JSONObject;
@@ -11,6 +12,7 @@ import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
+import sun.security.util.SecurityConstants;
 
 import java.text.ParseException;
 
@@ -26,7 +28,7 @@ public class AuthGlobalFilter implements GlobalFilter, Ordered {
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         ServerHttpRequest request = exchange.getRequest();
         String token = request.getHeaders().getFirst(AuthConstant.JWT_TOKEN_HEADER);
-        if (ObjectUtil.isEmpty(token)){
+        if (StrUtil.isBlank(token) || !StrUtil.startWithIgnoreCase(token, AuthConstant.JWT_TOKEN_PREFIX)) {
             return chain.filter(exchange);
         }
         String realToken = token.replace(AuthConstant.JWT_TOKEN_PREFIX, "");
